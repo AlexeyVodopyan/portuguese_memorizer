@@ -1,0 +1,78 @@
+:root{
+  --bg: #0b1020;
+  --panel: #151a2c;
+  --panel-2: #20263d;
+  --text: #e8edf6;
+  --muted: #9aa3b2;
+  --primary: #5b8cff;
+  --success: #2db37c;
+  --error: #e25555;
+  --warning: #ffcc66;
+}
+*{box-sizing: border-box}
+html,body,#root{height:100%}
+body{
+  margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--bg); color: var(--text);
+}
+.container{max-width: 980px; margin: 0 auto; padding: 0 16px}
+.app-header{
+  position: sticky; top: 0; z-index: 10; background: rgba(11,16,32,.7); backdrop-filter: blur(8px); border-bottom: 1px solid #222946
+}
+.header-inner{display:flex; align-items:center; justify-content:space-between; gap: 8px; min-height: 56px}
+.brand{color: var(--text); text-decoration: none; font-weight: 700}
+nav{display:flex; gap:10px; flex-wrap: wrap}
+nav a{color: var(--muted); text-decoration:none; padding:8px 10px; border-radius:8px}
+nav a.active{background: var(--panel); color: var(--text)}
+.subtle-path{font-size: 12px; color: var(--muted); padding: 2px 16px 8px}
+.app-root main{padding: 16px 0 40px}
+.footer{opacity:.7; font-size: 12px; padding-bottom: 24px}
+
+.home .hero{display:flex; flex-direction:column; gap:6px; margin: 10px 0 18px}
+.muted{color: var(--muted)}
+.modes-grid{display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px}
+.mode{display:block; background: var(--panel); padding:16px; border-radius:12px; color: var(--text); text-decoration:none; border:1px solid #222946}
+.mode:hover{border-color:#2b3356}
+.mode.outline{background: transparent}
+
+.train .card{background: var(--panel); border:1px solid #222946; border-radius: 16px; padding: 16px}
+.card-header{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.qa{display:flex; flex-direction:column; gap: 14px}
+.prompt{font-size: 26px; font-weight: 700; padding: 8px 0}
+.options{display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px}
+.option{padding: 12px; border-radius: 12px; background: var(--panel-2); color: var(--text); border:1px solid #2a3154}
+.option.selected{outline: 2px solid var(--primary)}
+.option.correct{background: rgba(45,179,124,.18); border-color: var(--success)}
+.option.wrong{background: rgba(226,85,85,.18); border-color: var(--error)}
+.input-mode{display:flex; gap:10px}
+input[type="text"]{flex:1; background: var(--panel-2); color: var(--text); border:1px solid #2a3154; border-radius: 10px; padding: 10px 12px; font-size:16px}
+button{appearance:none; border:1px solid #2a3154; background: var(--panel-2); color: var(--text); border-radius: 10px; padding: 10px 14px; cursor: pointer}
+button.ghost{background: transparent}
+button.primary{background: var(--primary); border-color: transparent; color: white}
+button.danger{background: #c64b4b; border-color: transparent; color: white}
+button:disabled{opacity:.6; cursor: not-allowed}
+.alert{padding: 10px 12px; border-radius: 10px; border:1px solid transparent}
+.alert.success{background: rgba(45,179,124,.18); border-color: var(--success)}
+.alert.error{background: rgba(226,85,85,.18); border-color: var(--error)}
+.actions{display:flex; justify-content:flex-end}
+
+.progress-page .stats{display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin: 10px 0}
+.stat{background: var(--panel); border:1px solid #222946; border-radius: 12px; padding: 12px}
+.stat .value{font-size: 22px; font-weight: 700}
+.stat .label{color: var(--muted)}
+.progressbar{position: relative; height: 16px; border-radius: 999px; background: #1a2240; border:1px solid #222946; overflow: hidden}
+.progressbar .bar{position:absolute; left:0; top:0; bottom:0; background: linear-gradient(90deg, var(--primary), #7aa3ff)}
+.progressbar .percent{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size: 12px; color: #d8def0}
+.cards-grid{display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px}
+.mini-card{background: var(--panel); border:1px solid #222946; border-radius: 12px; padding: 10px; display:flex; flex-direction:column; gap:6px}
+.mini-card.learned{outline:2px solid rgba(45,179,124,.4)}
+.mini-card .row{display:flex; align-items:center; justify-content:space-between; gap: 10px}
+.mini-card .row.small{font-size: 12px; color: var(--muted)}
+.mini-card .pt{font-weight:700}
+
+@media (max-width: 720px){
+  .modes-grid, .options, .cards-grid{grid-template-columns: 1fr}
+  .prompt{font-size: 22px}
+  nav{overflow:auto}
+}
+
