@@ -33,7 +33,7 @@ function Header() {
           <NavLink to="/train/pt2ru_choice" className={({isActive}) => isActive ? 'active' : ''}>PT→RU (выбор)</NavLink>
           <NavLink to="/train/ru2pt_choice" className={({isActive}) => isActive ? 'active' : ''}>RU→PT (выбор)</NavLink>
           <NavLink to="/train/pt2ru_input" className={({isActive}) => isActive ? 'active' : ''}>PT→RU (ввод)</NavLink>
-          <NavLink to="/progress" className={({isActive}) => isActive ? 'active' : ''}>Пр��гресс</NavLink>
+          <NavLink to="/progress" className={({isActive}) => isActive ? 'active' : ''}>Прогресс</NavLink>
         </nav>
         <div className="user-box">
           {user ? (
