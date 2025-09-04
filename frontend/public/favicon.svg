@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Minimalist favicon: dark background + small Portuguese flag in center -->
+  <rect width="64" height="64" rx="12" fill="#0b1020"/>
+  <!-- Flag group scaled down -->
+  <g transform="translate(32 32) scale(0.55) translate(-16 -12)">
+    <!-- Flag base 32x24 (scaled) -->
+    <rect width="32" height="24" rx="3" fill="#d40000"/>
+    <rect width="12" height="24" rx="3" fill="#006600"/>
+    <!-- Simplified coat of arms: yellow ring + blue center -->
+    <circle cx="12" cy="12" r="6.5" fill="#ffcc00"/>
+    <circle cx="12" cy="12" r="4" fill="#0d3a8a"/>
+    <!-- White mini shield (simple) -->
+    <rect x="10.7" y="9.5" width="2.6" height="5" rx="1" fill="#f5f7fa"/>
+  </g>
+</svg>

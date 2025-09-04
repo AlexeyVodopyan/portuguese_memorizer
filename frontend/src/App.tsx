@@ -20,22 +20,22 @@ function Header() {
   return (
     <header className="app-header">
       <div className="container header-inner">
-        <Link to="/" className="brand">🇵🇹 Portuguese Memorizer</Link>
+        <Link to="/" className="brand">🇵🇹 OlaCards</Link>
         <nav>
-          <NavLink to="/" className={({isActive}) => isActive ? 'active' : ''}>Home</NavLink>
-          <NavLink to="/train/pt2ru_choice" className={({isActive}) => isActive ? 'active' : ''}>PT→RU (choice)</NavLink>
-          <NavLink to="/train/ru2pt_choice" className={({isActive}) => isActive ? 'active' : ''}>RU→PT (choice)</NavLink>
-          <NavLink to="/train/pt2ru_input" className={({isActive}) => isActive ? 'active' : ''}>PT→RU (input)</NavLink>
-          <NavLink to="/progress" className={({isActive}) => isActive ? 'active' : ''}>Progress</NavLink>
+          <NavLink to="/" className={({isActive}) => isActive ? 'active' : ''}>Главная</NavLink>
+          <NavLink to="/train/pt2ru_choice" className={({isActive}) => isActive ? 'active' : ''}>PT→RU (выбор)</NavLink>
+          <NavLink to="/train/ru2pt_choice" className={({isActive}) => isActive ? 'active' : ''}>RU→PT (выбор)</NavLink>
+          <NavLink to="/train/pt2ru_input" className={({isActive}) => isActive ? 'active' : ''}>PT→RU (ввод)</NavLink>
+          <NavLink to="/progress" className={({isActive}) => isActive ? 'active' : ''}>Прогресс</NavLink>
         </nav>
         <div className="user-box">
           {user ? (
             <>
               <span className="username">{user}</span>
-              <button onClick={logout} className="linklike">Logout</button>
+              <button onClick={logout} className="linklike">Выйти</button>
             </>
           ) : (
-            <Link to="/auth">Login</Link>
+            <Link to="/auth">Войти</Link>
           )}
         </div>
       </div>
@@ -63,7 +63,7 @@ export default function App() {
           <Route path="/progress" element={<Protected><ProgressPage /></Protected>} />
         </Routes>
       </main>
-      <footer className="container footer">Built with FastAPI + React</footer>
+      <footer className="container footer">Сделано на FastAPI + React</footer>
     </div>
   )
 }

@@ -10,28 +10,28 @@ export function Home() {
   return (
     <section className="home">
       <div className="hero">
-        <h1>Learn Portuguese with flashcards</h1>
-        <p>Three modes, instant feedback, and progress tracking.</p>
+        <h1>Изучайте португальский с помощью карточек</h1>
+        <p>Три режима, мгновенная проверка и отслеживание прогресса.</p>
         {counts && (
-          <p className="muted">Total: {counts.total} • Studied: {counts.studied} • Learned: {counts.learned}</p>
+          <p className="muted">Всего: {counts.total} • Изучено: {counts.studied} • Выучено: {counts.learned}</p>
         )}
       </div>
       <div className="modes-grid">
         <Link to="/train/pt2ru_choice" className="mode">
-          <h3>Portuguese → Russian</h3>
-          <p>Multiple choice</p>
+          <h3>PT → RU (выбор)</h3>
+          <p>Множественный выбор</p>
         </Link>
         <Link to="/train/ru2pt_choice" className="mode">
-          <h3>Russian → Portuguese</h3>
-          <p>Multiple choice</p>
+          <h3>RU → PT (выбор)</h3>
+          <p>Множественный выбор</p>
         </Link>
         <Link to="/train/pt2ru_input" className="mode">
-          <h3>Portuguese → Russian</h3>
-          <p>Type the answer</p>
+          <h3>PT → RU (ввод)</h3>
+          <p>Введите перевод</p>
         </Link>
         <Link to="/progress" className="mode outline">
-          <h3>Progress</h3>
-          <p>View stats and reset</p>
+          <h3>Прогресс</h3>
+          <p>Статистика и сброс</p>
         </Link>
       </div>
     </section>

@@ -11,7 +11,7 @@ export function AuthPage() {
   async function submit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
-    if (!username || !password) { setError('Fill all fields'); return }
+    if (!username || !password) { setError('Заполните все поля'); return }
     setLoading(true)
     try {
       if (mode === 'login') await api.login(username, password)
@@ -19,7 +19,7 @@ export function AuthPage() {
       // reload to refresh header state
       window.location.href = '/'
     } catch (err: any) {
-      setError(err.message || 'Error')
+      setError(err.message || 'Ошибка')
     } finally {
       setLoading(false)
     }
@@ -28,24 +28,24 @@ export function AuthPage() {
   return (
     <div className="auth-page">
       <div className="auth-panel">
-        <h1>{mode === 'login' ? 'Login' : 'Register'}</h1>
+        <h1>{mode === 'login' ? 'Вход' : 'Регистрация'}</h1>
         <form onSubmit={submit} className="auth-form">
           <label>
-            <span>Username</span>
+            <span>Имя пользователя</span>
             <input autoComplete="username" value={username} onChange={e=>setUsername(e.target.value)} />
           </label>
           <label>
-            <span>Password</span>
+            <span>Пароль</span>
             <input type="password" autoComplete={mode==='login'?'current-password':'new-password'} value={password} onChange={e=>setPassword(e.target.value)} />
           </label>
           {error && <div className="alert error" style={{marginTop:8}}>{error}</div>}
-          <button disabled={loading} className="primary" style={{marginTop:12, width:'100%'}}>{loading ? '...' : (mode==='login'?'Login':'Create account')}</button>
+          <button disabled={loading} className="primary" style={{marginTop:12, width:'100%'}}>{loading ? '...' : (mode==='login'?'Войти':'Создать аккаунт')}</button>
         </form>
         <div className="switch-mode">
           {mode==='login' ? (
-            <button type="button" className="ghost" onClick={()=>{setMode('register'); setError(null)}}>Need an account? Register</button>
+            <button type="button" className="ghost" onClick={()=>{setMode('register'); setError(null)}}>Нужна учетная запись? Регистрация</button>
           ) : (
-            <button type="button" className="ghost" onClick={()=>{setMode('login'); setError(null)}}>Have an account? Login</button>
+            <button type="button" className="ghost" onClick={()=>{setMode('login'); setError(null)}}>Уже есть аккаунт? Войти</button>
           )}
         </div>
       </div>
@@ -53,4 +53,3 @@ export function AuthPage() {
   )
 }
 export default AuthPage
-

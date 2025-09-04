@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api, { Mode, Question } from '../api'
 
 interface Props { mode: Mode }
 
-type Stage = 'idle' | 'loading' | 'answering' | 'feedback'
+const SESSION_SIZE = 10
+
+type Stage = 'idle' | 'loading' | 'answering' | 'feedback' | 'finished'
 
 export function TrainingView({ mode }: Props) {
   const [stage, setStage] = useState<Stage>('idle')
@@ -11,12 +14,15 @@ export function TrainingView({ mode }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [selected, setSelected] = useState<string>('')
   const [result, setResult] = useState<{ correct: boolean; correct_answer: string } | null>(null)
+  const [answered, setAnswered] = useState(0)
+  const [correctInSession, setCorrectInSession] = useState(0)
+  const navigate = useNavigate()
 
   const title = useMemo(() => {
     switch (mode) {
-      case 'pt2ru_choice': return 'Portuguese → Russian (multiple choice)'
-      case 'ru2pt_choice': return 'Russian → Portuguese (multiple choice)'
-      case 'pt2ru_input': return 'Portuguese → Russian (typed)'
+      case 'pt2ru_choice': return 'Португальский → Русский (выбор)'
+      case 'ru2pt_choice': return 'Русский → Португальский (выбор)'
+      case 'pt2ru_input': return 'Португальский → Русский (ввод)'
     }
   }, [mode])
 
@@ -30,12 +36,16 @@ export function TrainingView({ mode }: Props) {
       setQuestion(q)
       setStage('answering')
     } catch (e: any) {
-      setError(e.message || 'Failed to load question')
+      setError(e.message || 'Не удалось загрузить вопрос')
       setStage('idle')
     }
   }
 
-  useEffect(() => { loadQuestion() }, [mode])
+  useEffect(() => {
+    // reset session on mode change
+    setAnswered(0); setCorrectInSession(0); setQuestion(null); setResult(null); setStage('idle');
+    loadQuestion()
+  }, [mode])
 
   async function submit(answer: string) {
     if (!question) return
@@ -43,25 +53,49 @@ export function TrainingView({ mode }: Props) {
       setStage('loading')
       const r = await api.submitAnswer({ card_id: question.card_id, mode, answer })
       setResult(r)
-      setStage('feedback')
+      const newAnswered = answered + 1
+      setAnswered(newAnswered)
+      if (r.correct) setCorrectInSession(c => c + 1)
+      if (newAnswered >= SESSION_SIZE) {
+        setStage('finished')
+      } else {
+        setStage('feedback')
+      }
     } catch (e: any) {
-      setError(e.message || 'Failed to submit answer')
+      setError(e.message || 'Не удалось отправить ответ')
       setStage('answering')
     }
   }
 
   const isChoice = mode === 'pt2ru_choice' || mode === 'ru2pt_choice'
 
+  const restartSession = () => {
+    setAnswered(0); setCorrectInSession(0); setResult(null); setQuestion(null); setStage('idle');
+    loadQuestion()
+  }
+
   return (
     <div className="train">
       <div className="card">
         <div className="card-header">
           <h2>{title}</h2>
-          <button className="ghost" onClick={loadQuestion} disabled={stage==='loading'}>↻ New</button>
+          {stage !== 'finished' && <button className="ghost" onClick={loadQuestion} disabled={stage==='loading'}>↻ Новый</button>}
+          {stage === 'finished' && <button className="ghost" onClick={restartSession}>↻ Сначала</button>}
         </div>
+        {stage !== 'finished' && <div style={{fontSize:12, opacity:.7}}>Карточка {Math.min(answered+1, SESSION_SIZE)} / {SESSION_SIZE}</div>}
         {error && <div className="alert error">{error}</div>}
-        {!question && stage==='loading' && <div>Loading…</div>}
-        {question && (
+        {stage === 'finished' && (
+          <div className="session-summary">
+            <h3>Сессия завершена</h3>
+            <p>Правильно: <strong>{correctInSession}</strong> из {SESSION_SIZE}</p>
+            <div className="actions" style={{gap:8}}>
+              <button className="primary" onClick={() => navigate('/progress')}>Перейти к прогрессу</button>
+              <button className="ghost" onClick={restartSession}>Новая сессия</button>
+            </div>
+          </div>
+        )}
+        {stage !== 'finished' && !question && stage==='loading' && <div>Loading…</div>}
+        {stage !== 'finished' && question && (
           <div className="qa">
             <div className="prompt" aria-live="polite">{question.prompt}</div>
             {isChoice ? (
@@ -88,31 +122,31 @@ export function TrainingView({ mode }: Props) {
               <form className="input-mode" onSubmit={(e) => { e.preventDefault(); submit(selected) }}>
                 <input
                   type="text"
-                  placeholder="Type translation"
+                  placeholder="Введите перевод"
                   value={selected}
                   onChange={(e) => setSelected(e.target.value)}
                   disabled={stage !== 'answering'}
                   autoFocus
                 />
                 {stage === 'answering' && (
-                  <button type="submit" className="primary" disabled={!selected.trim()}>Check</button>
+                  <button type="submit" className="primary" disabled={!selected.trim()}>Проверить</button>
                 )}
               </form>
             )}
-
-            {stage === 'feedback' && result && (
-              <div className={`alert ${result.correct ? 'success' : 'error'}`} role="status">
-                {result.correct ? 'Correct! 🎉' : (
-                  <span>Wrong. Correct answer: <strong>{result.correct_answer}</strong></span>
-                )}
-              </div>
+          </div>
+        )}
+        {stage !== 'finished' && stage === 'feedback' && result && (
+          <div className={`alert ${result.correct ? 'success' : 'error'}`} role="status">
+            {result.correct ? 'Верно! 🎉' : (
+              <span>Неверно. Правильный ответ: <strong>{result.correct_answer}</strong></span>
             )}
-
-            <div className="actions">
-              <button onClick={loadQuestion} className="primary" disabled={stage==='loading'}>
-                Next
-              </button>
-            </div>
+          </div>
+        )}
+        {stage !== 'finished' && question && (
+          <div className="actions">
+            <button onClick={loadQuestion} className="primary" disabled={stage==='loading' || stage==='answering'}>
+              {answered + 1 >= SESSION_SIZE ? 'Завершить' : 'Далее'}
+            </button>
           </div>
         )}
       </div>
