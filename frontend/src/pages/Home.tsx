@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import api, { ProgressSummary } from '../api'
+import api, { ProgressSummary} from '../api'
 
 export function Home() {
   const [counts, setCounts] = useState<{ total: number; studied: number; learned: number } | null>(null)

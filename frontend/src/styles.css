@@ -70,9 +70,21 @@ button:disabled{opacity:.6; cursor: not-allowed}
 .mini-card .row.small{font-size: 12px; color: var(--muted)}
 .mini-card .pt{font-weight:700}
 
+.auth-page{min-height:calc(100vh - 120px); display:flex; align-items:center; justify-content:center; padding:40px 16px}
+.auth-panel{width:100%; max-width:360px; background: var(--panel); border:1px solid #222946; border-radius:18px; padding:28px 26px; display:flex; flex-direction:column; gap:14px}
+.auth-panel h1{margin:0 0 4px; font-size:24px}
+.auth-form{display:flex; flex-direction:column; gap:12px}
+.auth-form label{display:flex; flex-direction:column; gap:6px; font-size:14px; color: var(--muted)}
+.auth-form input{background: var(--panel-2); border:1px solid #2a3154; border-radius:10px; padding:10px 12px; font-size:15px; color: var(--text)}
+.switch-mode{margin-top:4px; display:flex; justify-content:center}
+.switch-mode button{font-size:13px}
+.user-box{display:flex; align-items:center; gap:10px}
+.user-box .username{font-weight:600; font-size:14px}
+button.linklike{background:transparent; border:none; padding:0; color: var(--primary); cursor:pointer}
+button.linklike:hover{text-decoration:underline}
+
 @media (max-width: 720px){
   .modes-grid, .options, .cards-grid{grid-template-columns: 1fr}
   .prompt{font-size: 22px}
   nav{overflow:auto}
 }
-
