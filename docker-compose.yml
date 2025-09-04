@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    container_name: portuguese_memorizer_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/app/app:ro
+      - ./backend/data:/app/data
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Internal service URL used at build time
+        VITE_API_BASE: http://backend:8000
+    container_name: portuguese_memorizer_frontend
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    restart: unless-stopped
+
+# If you want to persist only progress.json elsewhere, you could define a named volume
+# volumes:
+#   progress_data:
+#     driver: local
+
