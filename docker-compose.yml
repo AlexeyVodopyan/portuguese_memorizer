@@ -1,31 +1,52 @@
 version: "3.9"
 
+networks:
+  web: {}
+
 services:
   backend:
     build: ./backend
     container_name: portuguese_memorizer_backend
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     volumes:
       - ./backend/app:/app/app:ro
       - ./backend/data:/app/data
     restart: unless-stopped
+    networks: [web]
 
   frontend:
     build:
       context: ./frontend
       args:
-        # Internal service URL used at build time
-        VITE_API_BASE: http://backend:8000
+        # теперь фронт ходит на /api через прокси
+        VITE_API_BASE: /api
     container_name: portuguese_memorizer_frontend
     depends_on:
       - backend
+    expose:
+      - "80"
+    restart: unless-stopped
+    networks: [web]
+
+  caddy:
+    image: caddy:2
+    container_name: olacards_caddy
+    restart: unless-stopped
+    depends_on:
+      - backend
+      - frontend
     ports:
       - "80:80"
-    restart: unless-stopped
+      - "443:443"
+    environment:
+      - EMAIL=admin@olacards.com
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks: [web]
 
-# If you want to persist only progress.json elsewhere, you could define a named volume
-# volumes:
-#   progress_data:
-#     driver: local
-
+volumes:
+  caddy_data:
+  caddy_config:
