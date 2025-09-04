@@ -9,6 +9,7 @@ function Header() {
   const location = useLocation()
   const navigate = useNavigate()
   const [user, setUser] = useState<string | null>(null)
+  const [mobileOpen, setMobileOpen] = useState(false)
   useEffect(() => {
     if (api.getToken()) {
       api.me().then(r => setUser(r.username)).catch(() => setUser(null))
@@ -16,17 +17,23 @@ function Header() {
       setUser(null)
     }
   }, [])
+  useEffect(() => { setMobileOpen(false) }, [location.pathname])
   const logout = () => { api.logout(); setUser(null); navigate('/auth', { replace: true }) }
   return (
-    <header className="app-header">
+    <header className={"app-header" + (mobileOpen ? ' mobile-open' : '')}>
       <div className="container header-inner">
+        <button className="menu-toggle" aria-label="Меню" aria-expanded={mobileOpen} aria-controls="main-nav" onClick={() => setMobileOpen(o=>!o)}>
+          <span />
+          <span />
+          <span />
+        </button>
         <Link to="/" className="brand">🇵🇹 OlaCards</Link>
-        <nav>
+        <nav id="main-nav">
           <NavLink to="/" className={({isActive}) => isActive ? 'active' : ''}>Главная</NavLink>
           <NavLink to="/train/pt2ru_choice" className={({isActive}) => isActive ? 'active' : ''}>PT→RU (выбор)</NavLink>
           <NavLink to="/train/ru2pt_choice" className={({isActive}) => isActive ? 'active' : ''}>RU→PT (выбор)</NavLink>
           <NavLink to="/train/pt2ru_input" className={({isActive}) => isActive ? 'active' : ''}>PT→RU (ввод)</NavLink>
-          <NavLink to="/progress" className={({isActive}) => isActive ? 'active' : ''}>Прогресс</NavLink>
+          <NavLink to="/progress" className={({isActive}) => isActive ? 'active' : ''}>Пр��гресс</NavLink>
         </nav>
         <div className="user-box">
           {user ? (
