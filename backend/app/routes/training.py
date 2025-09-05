@@ -129,8 +129,13 @@ async def list_words():
     return _load_words()
 
 @router.get('/question', response_model=Question)
-async def get_question(mode: str, options: int = 4, username: str = Depends(get_current_user)):
+async def get_question(mode: str, options: int = 4, categories: str | None = None, username: str = Depends(get_current_user)):
     words = _load_words()
+    if categories:
+        wanted = {c.strip() for c in categories.split(',') if c.strip()}
+        filtered = [w for w in words if w.get('category') in wanted]
+        if filtered:
+            words = filtered
     progress = _load_progress(username)
     return _sample_question(words, mode=mode, progress=progress, options_count=max(2, min(6, options)))
 

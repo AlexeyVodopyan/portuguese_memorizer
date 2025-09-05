@@ -8,6 +8,8 @@
   --success: #2db37c;
   --error: #e25555;
   --warning: #ffcc66;
+  --border: #222946;
+  --accent: var(--primary);
 }
 *{box-sizing: border-box}
 html,body,#root{height:100%}
@@ -90,6 +92,15 @@ button.linklike:hover{text-decoration:underline}
 .app-header.mobile-open .menu-toggle span:nth-child(2){opacity:0}
 .app-header.mobile-open .menu-toggle span:first-child{transform:translateY(6px) rotate(45deg)}
 .app-header.mobile-open .menu-toggle span:last-child{transform:translateY(-6px) rotate(-45deg)}
+
+.categories-filter{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px}
+.chip{appearance:none; cursor:pointer; background:transparent; border:1px solid var(--border); color: var(--muted); padding:4px 10px; border-radius:999px; font-size:12px; line-height:1.2; transition:.18s background, .18s color, .18s border-color, .18s box-shadow}
+.chip:hover{border-color: var(--primary); color: var(--text)}
+.chip.active{background: var(--accent); border-color: var(--accent); color:#fff; box-shadow:0 0 0 2px rgba(91,140,255,.35)}
+.chip:focus-visible{outline:2px solid var(--primary); outline-offset:2px}
+
+/* Optional: small reset for buttons inside categories-filter */
+.categories-filter .chip{font-weight:500}
 
 @media (max-width: 720px){
   .modes-grid, .options, .cards-grid{grid-template-columns: 1fr}

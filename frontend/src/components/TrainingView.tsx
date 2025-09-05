@@ -16,6 +16,8 @@ export function TrainingView({ mode }: Props) {
   const [result, setResult] = useState<{ correct: boolean; correct_answer: string } | null>(null)
   const [answered, setAnswered] = useState(0)
   const [correctInSession, setCorrectInSession] = useState(0)
+  const [allCategories, setAllCategories] = useState<string[]>([])
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const navigate = useNavigate()
 
   const title = useMemo(() => {
@@ -27,13 +29,25 @@ export function TrainingView({ mode }: Props) {
     }
   }, [mode])
 
+  useEffect(() => {
+    // load categories once
+    api.getWords().then(ws => {
+      const cats = Array.from(new Set(ws.map(w => w.category).filter(Boolean))) as string[]
+      setAllCategories(cats)
+    }).catch(()=>{})
+  }, [])
+
+  const toggleCategory = (c: string) => {
+    setSelectedCategories(prev => prev.includes(c) ? prev.filter(x=>x!==c) : [...prev, c])
+  }
+
   async function loadQuestion() {
     try {
       setStage('loading')
       setError(null)
       setResult(null)
       setSelected('')
-      const q = await api.getQuestion(mode, 4)
+      const q = await api.getQuestion(mode, 4, selectedCategories.length ? selectedCategories : undefined)
       setQuestion(q)
       setStage('answering')
     } catch (e: any) {
@@ -43,10 +57,10 @@ export function TrainingView({ mode }: Props) {
   }
 
   useEffect(() => {
-    // reset session on mode change
+    // reset session on mode change or category change
     setAnswered(0); setCorrectInSession(0); setQuestion(null); setResult(null); setStage('idle');
     loadQuestion()
-  }, [mode])
+  }, [mode, selectedCategories.join(',')])
 
   async function submit(answer: string) {
     if (!question) return
@@ -83,6 +97,15 @@ export function TrainingView({ mode }: Props) {
           {stage !== 'finished' && <button className="ghost" onClick={loadQuestion} disabled={stage==='loading'}>↻ Новый</button>}
           {stage === 'finished' && <button className="ghost" onClick={restartSession}>↻ Сначала</button>}
         </div>
+        {allCategories.length > 0 && (
+          <div className="categories-filter" style={{display:'flex', flexWrap:'wrap', gap:6, marginBottom:12}}>
+            {allCategories.map(c => {
+              const active = selectedCategories.includes(c)
+              return <button type="button" key={c} onClick={()=>toggleCategory(c)} className={active? 'chip active' : 'chip'} style={{padding:'2px 8px', borderRadius:12, border:'1px solid var(--border)', background: active? 'var(--accent)' : 'transparent', color: active? '#fff':'inherit', fontSize:12}}>{c}</button>
+            })}
+            {selectedCategories.length > 0 && <button type="button" onClick={()=>setSelectedCategories([])} className="chip" style={{padding:'2px 8px', borderRadius:12, border:'1px solid var(--border)', fontSize:12}}>Сброс</button>}
+          </div>
+        )}
         {stage !== 'finished' && <div style={{fontSize:12, opacity:.7}}>Карточка {Math.min(answered+1, SESSION_SIZE)} / {SESSION_SIZE}</div>}
         {error && <div className="alert error">{error}</div>}
         {stage === 'finished' && (

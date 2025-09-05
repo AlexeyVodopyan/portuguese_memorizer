@@ -62,12 +62,16 @@ const api = {
   me: () => http<{ username: string }>(`/api/auth/me`),
   logout: () => { setToken(null) },
   // Training
-  getQuestion: (mode: Mode, options = 4) => http<Question>(`/api/question?mode=${mode}&options=${options}`),
+  getQuestion: (mode: Mode, options = 4, categories?: string[]) => {
+    const params = new URLSearchParams({ mode, options: String(options) })
+    if (categories && categories.length) params.set('categories', categories.join(','))
+    return http<Question>(`/api/question?${params.toString()}`)
+  },
   submitAnswer: (payload: { card_id: number; mode: Mode; answer: string }) =>
     http<AnswerResponse>(`/api/answer`, { method: 'POST', body: JSON.stringify(payload) }),
   getProgress: () => http<ProgressSummary>(`/api/progress`),
   resetProgress: () => http<{ status: string }>(`/api/reset`, { method: 'POST' }),
-  getWords: () => http<Array<{ id: number; pt: string; ru: string }>>(`/api/words`),
+  getWords: () => http<Array<{ id: number; pt: string; ru: string; category?: string }>>(`/api/words`),
   getToken: () => authToken,
 }
 
