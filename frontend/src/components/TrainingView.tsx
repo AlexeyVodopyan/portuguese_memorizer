@@ -23,6 +23,7 @@ export function TrainingView({ mode }: Props) {
       case 'pt2ru_choice': return 'Португальский → Русский (выбор)'
       case 'ru2pt_choice': return 'Русский → Португальский (выбор)'
       case 'pt2ru_input': return 'Португальский → Русский (ввод)'
+      case 'ru2pt_input': return 'Русский → Португальский (ввод)'
     }
   }, [mode])
 

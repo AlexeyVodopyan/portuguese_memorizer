@@ -113,6 +113,8 @@ def _sample_question(words: List[Dict], mode: str, progress: Dict, options_count
         others = [w['pt'] for w in words if w['id'] != card['id']]
     elif mode == 'pt2ru_input':
         return Question(card_id=card['id'], mode=mode, prompt=card['pt'])
+    elif mode == 'ru2pt_input':  # NEW MODE
+        return Question(card_id=card['id'], mode=mode, prompt=card['ru'])
     else:
         raise HTTPException(status_code=400, detail='Invalid mode')
     distractors = random.sample(others, k=min(max(1, options_count - 1), len(others))) if others else []
@@ -139,7 +141,7 @@ async def submit_answer(payload: AnswerRequest, username: str = Depends(get_curr
         card = _get_card_by_id(words, payload.card_id)
     except KeyError:
         raise HTTPException(status_code=404, detail='Card not found')
-    if payload.mode not in {"pt2ru_choice", "pt2ru_input", "ru2pt_choice"}:
+    if payload.mode not in {"pt2ru_choice", "pt2ru_input", "ru2pt_choice", "ru2pt_input"}:  # added ru2pt_input
         raise HTTPException(status_code=400, detail='Invalid mode')
     correct_answer = card['ru'] if payload.mode in {"pt2ru_choice", "pt2ru_input"} else card['pt']
     is_correct = _normalize_text(correct_answer) == _normalize_text(payload.answer)

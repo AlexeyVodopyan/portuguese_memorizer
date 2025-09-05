@@ -1,4 +1,4 @@
-export type Mode = 'pt2ru_choice' | 'ru2pt_choice' | 'pt2ru_input'
+export type Mode = 'pt2ru_choice' | 'ru2pt_choice' | 'pt2ru_input' | 'ru2pt_input'
 
 export interface Question {
   card_id: number

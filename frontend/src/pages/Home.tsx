@@ -29,6 +29,10 @@ export function Home() {
           <h3>PT → RU (ввод)</h3>
           <p>Введите перевод</p>
         </Link>
+        <Link to="/train/ru2pt_input" className="mode">
+          <h3>RU → PT (ввод)</h3>
+          <p>Введите перевод</p>
+        </Link>
         <Link to="/progress" className="mode outline">
           <h3>Прогресс</h3>
           <p>Статистика и сброс</p>
