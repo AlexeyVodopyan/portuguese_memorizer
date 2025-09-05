@@ -2782,5 +2782,23 @@
     "pt": "cento e onze",
     "ru": "111",
     "category": "числа"
+  },
+  {
+    "id": 465,
+    "pt": "verduras",
+    "ru": "овощи",
+    "category": "еда"
+  },
+  {
+    "id": 466,
+    "pt": "laticinios",
+    "ru": "молочные продукты",
+    "category": "еда"
+  },
+  {
+    "id": 467,
+    "pt": "bolo de arroz",
+    "ru": "рисовый пирог",
+    "category": "еда"
   }
 ]
