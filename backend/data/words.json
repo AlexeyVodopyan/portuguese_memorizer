@@ -85,13 +85,13 @@
   },
   {
     "id": 15,
-    "pt": "menina",
+    "pt": "a menina",
     "ru": "девочка",
     "category": "общая лексика"
   },
   {
     "id": 16,
-    "pt": "menino",
+    "pt": "o menino",
     "ru": "мальчик",
     "category": "общая лексика"
   },
@@ -103,13 +103,13 @@
   },
   {
     "id": 18,
-    "pt": "letra",
+    "pt": "a letra",
     "ru": "буква",
     "category": "общая лексика"
   },
   {
     "id": 19,
-    "pt": "som",
+    "pt": "o som",
     "ru": "звук",
     "category": "общая лексика"
   },
@@ -151,25 +151,25 @@
   },
   {
     "id": 26,
-    "pt": "energia positiva",
+    "pt": "a energia positiva",
     "ru": "позитивная энергия",
     "category": "общая лексика"
   },
   {
     "id": 27,
-    "pt": "gato",
+    "pt": "o gato",
     "ru": "кот",
     "category": "общая лексика"
   },
   {
     "id": 28,
-    "pt": "gata",
+    "pt": "a gata",
     "ru": "кошка",
     "category": "общая лексика"
   },
   {
     "id": 29,
-    "pt": "adjetivo",
+    "pt": "o adjetivo",
     "ru": "прилагательное",
     "category": "общая лексика"
   },
@@ -199,7 +199,7 @@
   },
   {
     "id": 34,
-    "pt": "palavra",
+    "pt": "a palavra",
     "ru": "слово",
     "category": "общая лексика"
   },
@@ -211,7 +211,7 @@
   },
   {
     "id": 36,
-    "pt": "professora",
+    "pt": "a professora",
     "ru": "учительница",
     "category": "профессия"
   },
@@ -229,7 +229,7 @@
   },
   {
     "id": 39,
-    "pt": "gestora de projetos",
+    "pt": "a gestora de projetos",
     "ru": "менеджер проектов (жен.)",
     "category": "профессия"
   },
@@ -241,13 +241,13 @@
   },
   {
     "id": 41,
-    "pt": "empresário",
+    "pt": "o empresário",
     "ru": "предприниматель (муж.)",
     "category": "профессия"
   },
   {
     "id": 42,
-    "pt": "fotógrafa",
+    "pt": "a fotógrafa",
     "ru": "фотограф (жен.)",
     "category": "профессия"
   },
@@ -631,19 +631,19 @@
   },
   {
     "id": 106,
-    "pt": "refeição",
+    "pt": "o refeição",
     "ru": "приём пищи",
     "category": "еда"
   },
   {
     "id": 107,
-    "pt": "pequeno-almoço",
+    "pt": "o pequeno-almoço",
     "ru": "завтрак",
     "category": "еда"
   },
   {
     "id": 108,
-    "pt": "almoço",
+    "pt": "o almoço",
     "ru": "обед",
     "category": "еда"
   },
@@ -655,7 +655,7 @@
   },
   {
     "id": 110,
-    "pt": "jantar",
+    "pt": "o jantar",
     "ru": "ужин",
     "category": "еда"
   },
@@ -703,7 +703,7 @@
   },
   {
     "id": 118,
-    "pt": "alimentação",
+    "pt": "o alimentação",
     "ru": "питание",
     "category": "общая лексика"
   },
@@ -1021,25 +1021,25 @@
   },
   {
     "id": 171,
-    "pt": "comando",
+    "pt": "o comando",
     "ru": "пульт",
     "category": "общая лексика"
   },
   {
     "id": 172,
-    "pt": "estojo",
+    "pt": "o estojo",
     "ru": "пенал",
     "category": "общая лексика"
   },
   {
     "id": 173,
-    "pt": "portátil",
+    "pt": "o portátil",
     "ru": "ноутбук",
     "category": "общая лексика"
   },
   {
     "id": 174,
-    "pt": "chávena",
+    "pt": "a chávena",
     "ru": "чашка",
     "category": "общая лексика"
   },
@@ -1225,19 +1225,19 @@
   },
   {
     "id": 205,
-    "pt": "hospedeira",
+    "pt": "a hospedeira",
     "ru": "стюардесса",
     "category": "профессия"
   },
   {
     "id": 206,
-    "pt": "caracol",
+    "pt": "o caracol",
     "ru": "улитка",
     "category": "общая лексика"
   },
   {
     "id": 207,
-    "pt": "tradutora",
+    "pt": "a tradutora",
     "ru": "переводчица",
     "category": "профессия"
   },
@@ -1261,13 +1261,13 @@
   },
   {
     "id": 211,
-    "pt": "homem",
+    "pt": "o homem",
     "ru": "мужчина",
     "category": "описание человека"
   },
   {
     "id": 212,
-    "pt": "mulher",
+    "pt": "a mulher",
     "ru": "женщина",
     "category": "описание человека"
   },
@@ -2040,12 +2040,6 @@
     "category": "общая лексика"
   },
   {
-    "id": 341,
-    "pt": "o menino",
-    "ru": "мальчик",
-    "category": "общая лексика"
-  },
-  {
     "id": 342,
     "pt": "xadrez",
     "ru": "шахматы",
@@ -2785,7 +2779,7 @@
   },
   {
     "id": 465,
-    "pt": "verduras",
+    "pt": "as verduras",
     "ru": "овощи",
     "category": "еда"
   },
@@ -2797,8 +2791,38 @@
   },
   {
     "id": 467,
-    "pt": "bolo de arroz",
+    "pt": "o bolo de arroz",
     "ru": "рисовый пирог",
     "category": "еда"
+  },
+  {
+    "id": 468,
+    "pt": "o polvo",
+    "ru": "осьминог",
+    "category": "еда"
+  },
+  {
+    "id": 469,
+    "pt": "as ervillas",
+    "ru": "горох",
+    "category": "еда"
+  },
+  {
+    "id": 470,
+    "pt": "a lente",
+    "ru": "линза",
+    "category": "еда"
+  },
+  {
+    "id": 471,
+    "pt": "eu prefiro comer",
+    "ru": "я предпочитаю есть",
+    "category": "общая лексика"
+  },
+  {
+    "id": 472,
+    "pt": "cães",
+    "ru": "собаки",
+    "category": "общая лексика"
   }
 ]
