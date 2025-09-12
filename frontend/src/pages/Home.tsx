@@ -7,11 +7,20 @@ export function Home() {
   useEffect(() => {
     api.getProgress().then((p: ProgressSummary) => setCounts({ total: p.total, studied: p.studied, learned: p.learned })).catch(() => {})
   }, [])
+  const TAGLINES = [
+    'Несколько режимов — учите удобно.',
+    'Карточки, ввод, спряжение глаголов — всё в одном месте.',
+    'Практикуйтесь в переводе и спряжении — прогресс сохраняется.',
+    'Учите слова и формы глаголов. Следите за прогрессом.',
+    'Гибкие режимы тренировки: выбор, ввод и спряжения.'
+  ]
+  const [tagline, setTagline] = useState('')
+  useEffect(()=>{ setTagline(TAGLINES[Math.floor(Math.random()*TAGLINES.length)]) },[])
   return (
     <section className="home">
       <div className="hero">
         <h1>Изучайте португальский с помощью карточек</h1>
-        <p>Три режима, мгновенная проверка и отслеживание прогресса.</p>
+        <p>{tagline}</p>
         {counts && (
           <p className="muted">Всего: {counts.total} • Изучено: {counts.studied} • Выучено: {counts.learned}</p>
         )}
@@ -32,6 +41,10 @@ export function Home() {
         <Link to="/train/ru2pt_input" className="mode">
           <h3>RU → PT (ввод)</h3>
           <p>Введите перевод</p>
+        </Link>
+        <Link to="/train/verbs" className="mode">
+          <h3>Глаголы</h3>
+          <p>Спряжение глаголов</p>
         </Link>
         <Link to="/progress" className="mode outline">
           <h3>Прогресс</h3>

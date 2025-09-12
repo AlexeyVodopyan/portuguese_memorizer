@@ -12,6 +12,7 @@ export function ProgressPage() {
   const [verbList, setVerbList] = useState<VerbListItem[]>([])
   const [showWords, setShowWords] = useState(false)
   const [showVerbList, setShowVerbList] = useState(false)
+  const [verbSort, setVerbSort] = useState<'alpha' | 'mastered' | 'progress'>('mastered')
 
   async function load() {
     try {
@@ -80,6 +81,23 @@ export function ProgressPage() {
   const toggleCategory = (c: string) => {
     setSelectedCategories(prev => prev.includes(c) ? prev.filter(x=>x!==c) : [...prev, c])
   }
+
+  const sortedVerbs = useMemo(()=>{
+    if(!verbProgress) return verbList
+    const arr = [...verbList]
+    switch(verbSort){
+      case 'alpha':
+        arr.sort((a,b)=> a.infinitive.localeCompare(b.infinitive,'pt'))
+        break
+      case 'mastered':
+        arr.sort((a,b)=> (verbProgress.by_verb[b.id]?.mastered||0) - (verbProgress.by_verb[a.id]?.mastered||0) || a.infinitive.localeCompare(b.infinitive,'pt'))
+        break
+      case 'progress':
+        arr.sort((a,b)=> (verbProgress.by_verb[b.id]?.seen||0) - (verbProgress.by_verb[a.id]?.seen||0) || a.infinitive.localeCompare(b.infinitive,'pt'))
+        break
+    }
+    return arr
+  }, [verbList, verbProgress, verbSort])
 
   return (
     <section className="progress-page">
@@ -184,8 +202,17 @@ export function ProgressPage() {
             </button>
             {showVerbList && (
               <div className="collapse-body">
+                <div style={{display:'flex', alignItems:'center', gap:12, flexWrap:'wrap', margin:'4px 0 12px'}}>
+                  <label style={{fontSize:12, display:'flex', alignItems:'center', gap:6}}>Сортировка:
+                    <select value={verbSort} onChange={e=>setVerbSort(e.target.value as any)} style={{background:'var(--panel-2)', color:'var(--text)', border:'1px solid #2a3154', borderRadius:8, padding:'4px 8px', fontSize:12}}>
+                      <option value="mastered">Освоенные сверху</option>
+                      <option value="progress">По количеству попыток</option>
+                      <option value="alpha">По алфавиту</option>
+                    </select>
+                  </label>
+                </div>
                 <div className="verbs-grid" style={{marginTop:4}}>
-                  {verbList.map(v => {
+                  {sortedVerbs.map(v => {
                     const s = verbProgress?.by_verb[v.id] || { seen:0, mastered:0 }
                     const mastered = s.mastered > 0
                     return (
@@ -195,7 +222,7 @@ export function ProgressPage() {
                       </div>
                     )
                   })}
-                  {verbList.length === 0 && <div style={{opacity:.6}}>Нет глаголов</div>}
+                  {sortedVerbs.length === 0 && <div style={{opacity:.6}}>Нет глаголов</div>}
                 </div>
               </div>
             )}
