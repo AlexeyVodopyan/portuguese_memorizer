@@ -102,6 +102,47 @@ button.linklike:hover{text-decoration:underline}
 /* Optional: small reset for buttons inside categories-filter */
 .categories-filter .chip{font-weight:500}
 
+.verb-table-wrapper{overflow-x:auto; margin-top:8px}
+.verb-table{width:100%; border-collapse:collapse; font-size:14px}
+.verb-table th, .verb-table td{border:1px solid #2a3354; padding:6px 8px; text-align:left; background:var(--panel-2)}
+.verb-table thead th{background:var(--panel); font-weight:600; font-size:13px}
+.verb-table td.pronoun{font-weight:600; width:160px}
+.verb-table input{width:100%; padding:6px 8px; border:1px solid #2a3154; border-radius:8px; background:var(--panel); color:var(--text); font-size:14px}
+.verb-table tr.ok td{background:rgba(45,179,124,.12)}
+.verb-table tr.bad td{background:rgba(226,85,85,.08)}
+.pill{display:inline-block; padding:2px 6px; border-radius:999px; font-size:12px; line-height:1.2; font-weight:600}
+.pill.ok{background:var(--success); color:#fff}
+.pill.bad{background:var(--error); color:#fff}
+
+/* Verb progress */
+.verbs-progress{margin-top:40px}
+.verbs-progress h3{margin:28px 0 10px}
+.verbs-grid{display:grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap:8px}
+.verb-mini{background:var(--panel); border:1px solid #222946; border-radius:10px; padding:8px 10px; display:flex; flex-direction:column; gap:4px; font-size:12px}
+.verb-mini.mastered{outline:2px solid rgba(45,179,124,.4)}
+.verb-mini .inf{font-weight:600; font-size:13px}
+
+/* Collapsible (accordion) blocks on progress page */
+.collapse-block{margin-top:26px; border:1px solid #222946; border-radius:14px; background:var(--panel); overflow:hidden}
+.collapse-header{all:unset; display:flex; align-items:center; gap:10px; width:100%; cursor:pointer; padding:12px 20px 12px 16px; font-weight:600; font-size:15px; line-height:1.2; user-select:none}
+.collapse-header:hover{background:rgba(255,255,255,.03)}
+.collapse-header:focus-visible{outline:2px solid var(--primary); outline-offset:2px; border-radius:12px}
+.collapse-header .chevron{font-size:14px; width:14px; display:inline-flex; justify-content:center}
+.collapse-header .mini-meta{margin-left:auto; font-size:11px; font-weight:500; padding:2px 16px 2px 8px; border-radius:999px; background:#1d2642; color:#c9d2e4; flex:0 0 auto; line-height:1.1; display:inline-flex; align-items:center; justify-content:center; letter-spacing:.2px}
+.collapse-header .mini-meta.inline{margin-left:8px; padding-left:8px; padding-right:12px}
+.collapse-body{padding:0 16px 20px}
+.collapse-body + .collapse-body{border-top:1px solid #222946}
+
+/* Dropdown menu for training modes */
+.dropdown{position:relative;}
+.dropdown-toggle{background:transparent; border:none; color:var(--muted); padding:8px 10px; border-radius:8px; font:inherit; cursor:pointer; display:flex; align-items:center; gap:6px}
+.dropdown-toggle:hover, .dropdown.open > .dropdown-toggle{background:var(--panel); color:var(--text)}
+.dropdown-menu{position:absolute; left:0; top:100%; margin-top:6px; background:var(--panel); border:1px solid #222946; border-radius:10px; padding:6px 6px; display:flex; flex-direction:column; gap:2px; min-width:220px; box-shadow:0 6px 18px -4px rgba(0,0,0,.4); z-index:30}
+.dropdown-menu a{padding:8px 10px; border-radius:8px; white-space:nowrap}
+.dropdown-menu a:hover{background:var(--panel-2); color:var(--text)}
+.dropdown-menu a.active{background:var(--primary); color:#fff}
+.dropdown:not(.open) > .dropdown-menu{display:none}
+
 @media (max-width: 720px){
   .modes-grid, .options, .cards-grid{grid-template-columns: 1fr}
   .prompt{font-size: 22px}
@@ -114,4 +155,12 @@ button.linklike:hover{text-decoration:underline}
   nav#main-nav a{padding:10px 8px; border-radius:10px}
   .user-box{margin-left:auto}
   .header-inner{gap:4px}
+}
+@media (max-width:720px){
+  .collapse-header{padding:12px 14px; font-size:14px}
+  .collapse-header .mini-meta{font-size:10px; padding:1px 5px}
+}
+@media (max-width:640px){
+  .collapse-header{flex-wrap:wrap}
+  .collapse-header .mini-meta{margin-left:0; margin-top:4px}
 }

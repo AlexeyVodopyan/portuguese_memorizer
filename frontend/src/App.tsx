@@ -1,15 +1,18 @@
 import { Link, Route, Routes, NavLink, useLocation, Navigate, useNavigate } from 'react-router-dom'
 import { TrainingView } from './components/TrainingView'
+import { VerbTrainingView } from './components/VerbTrainingView'
 import { Home, ProgressPage } from './pages'
 import api from './api'
 import { AuthPage } from './pages/AuthPage'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 function Header() {
   const location = useLocation()
   const navigate = useNavigate()
   const [user, setUser] = useState<string | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [showModes, setShowModes] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     if (api.getToken()) {
       api.me().then(r => setUser(r.username)).catch(() => setUser(null))
@@ -18,6 +21,17 @@ function Header() {
     }
   }, [])
   useEffect(() => { setMobileOpen(false) }, [location.pathname])
+  useEffect(() => { setShowModes(false) }, [location.pathname])
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (!showModes) return
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowModes(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showModes])
   const logout = () => { api.logout(); setUser(null); navigate('/auth', { replace: true }) }
   return (
     <header className={"app-header" + (mobileOpen ? ' mobile-open' : '')}>
@@ -30,10 +44,19 @@ function Header() {
         <Link to="/" className="brand">🇵🇹 OlaCards</Link>
         <nav id="main-nav">
           <NavLink to="/" className={({isActive}) => isActive ? 'active' : ''}>Главная</NavLink>
-          <NavLink to="/train/pt2ru_choice" className={({isActive}) => isActive ? 'active' : ''}>PT→RU (выбор)</NavLink>
-          <NavLink to="/train/ru2pt_choice" className={({isActive}) => isActive ? 'active' : ''}>RU→PT (выбор)</NavLink>
-          <NavLink to="/train/pt2ru_input" className={({isActive}) => isActive ? 'active' : ''}>PT→RU (ввод)</NavLink>
-          <NavLink to="/train/ru2pt_input" className={({isActive}) => isActive ? 'active' : ''}>RU→PT (ввод)</NavLink>
+          <div ref={dropdownRef} className={"dropdown" + (showModes ? ' open' : '')}>
+            <button type="button" className="dropdown-toggle" aria-haspopup="true" aria-expanded={showModes} onClick={()=>setShowModes(o=>!o)}>
+              <span>Режимы</span>
+              <span className="arrow" aria-hidden>▾</span>
+            </button>
+            <div className="dropdown-menu" role="menu">
+              <NavLink to="/train/pt2ru_choice" role="menuitem" className={({isActive}) => isActive ? 'active' : ''}>PT→RU (выбор)</NavLink>
+              <NavLink to="/train/ru2pt_choice" role="menuitem" className={({isActive}) => isActive ? 'active' : ''}>RU→PT (выбор)</NavLink>
+              <NavLink to="/train/pt2ru_input" role="menuitem" className={({isActive}) => isActive ? 'active' : ''}>PT→RU (ввод)</NavLink>
+              <NavLink to="/train/ru2pt_input" role="menuitem" className={({isActive}) => isActive ? 'active' : ''}>RU→PT (ввод)</NavLink>
+              <NavLink to="/train/verbs" role="menuitem" className={({isActive}) => isActive ? 'active' : ''}>Глаголы</NavLink>
+            </div>
+          </div>
           <NavLink to="/progress" className={({isActive}) => isActive ? 'active' : ''}>Прогресс</NavLink>
         </nav>
         <div className="user-box">
@@ -69,6 +92,7 @@ export default function App() {
           <Route path="/train/ru2pt_choice" element={<Protected><TrainingView mode="ru2pt_choice" /></Protected>} />
           <Route path="/train/pt2ru_input" element={<Protected><TrainingView mode="pt2ru_input" /></Protected>} />
           <Route path="/train/ru2pt_input" element={<Protected><TrainingView mode="ru2pt_input" /></Protected>} />
+          <Route path="/train/verbs" element={<Protected><VerbTrainingView /></Protected>} />
           <Route path="/progress" element={<Protected><ProgressPage /></Protected>} />
         </Routes>
       </main>

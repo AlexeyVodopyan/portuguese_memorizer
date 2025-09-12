@@ -9,8 +9,13 @@ from app.schemas import (
     AnswerRequest,
     AnswerResponse,
     ProgressSummary,
+    VerbQuestion,
+    VerbAnswerRequest,
+    VerbAnswerResponse,
+    PRONOUN_ORDER,
+    VerbProgressSummary,
 )
-from app.core.config import WORDS_FILE, PROGRESS_DIR
+from app.core.config import WORDS_FILE, PROGRESS_DIR, VERBS_FILE
 from app.core.deps import get_current_user
 
 router = APIRouter()
@@ -27,6 +32,15 @@ def _load_words() -> List[Dict]:
             return json.load(f)
     except json.JSONDecodeError:
         raise HTTPException(status_code=500, detail="Words file corrupt")
+
+def _load_verbs() -> List[Dict]:
+    if not VERBS_FILE.exists():
+        raise HTTPException(status_code=500, detail="Verbs file missing")
+    try:
+        with VERBS_FILE.open('r', encoding='utf-8') as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail="Verbs file corrupt")
 
 def _progress_path(username: str) -> Path:
     safe = ''.join(c for c in username if c.isalnum() or c in ('_', '-', '.')) or 'anon'
@@ -122,6 +136,40 @@ def _sample_question(words: List[Dict], mode: str, progress: Dict, options_count
     random.shuffle(options)
     return Question(card_id=card['id'], mode=mode, prompt=prompt, options=options)
 
+def _update_verb_progress(progress: Dict, verb_id: int, all_correct: bool) -> None:
+    key = f"verb_{verb_id}"
+    stats = progress.setdefault('verbs', {}).setdefault(key, {"seen": 0, "mastered": 0})
+    stats['seen'] += 1
+    if all_correct:
+        stats['mastered'] += 1
+    stats['last_seen'] = datetime.now(timezone.utc).isoformat()
+
+
+def _get_verb_by_id(verbs: List[Dict], verb_id: int) -> Dict:
+    for v in verbs:
+        if int(v['id']) == int(verb_id):
+            return v
+    raise KeyError
+
+
+def _sample_verb_question(verbs: List[Dict]) -> VerbQuestion:
+    verb = random.choice(verbs)
+    return VerbQuestion(verb_id=verb['id'], infinitive=verb['infinitive'])
+
+def _verb_progress_summary(verbs: List[Dict], progress: Dict) -> VerbProgressSummary:
+    stats_src = progress.get('verbs', {})
+    by_verb: Dict[int, Dict[str, int]] = {}
+    seen = 0
+    mastered = 0
+    for v in verbs:
+        s = stats_src.get(f"verb_{v['id']}", {"seen": 0, "mastered": 0})
+        if s.get('seen', 0) > 0:
+            seen += 1
+        if s.get('mastered', 0) > 0:
+            mastered += 1
+        by_verb[v['id']] = {"seen": s.get('seen', 0), "mastered": s.get('mastered', 0)}
+    return VerbProgressSummary(total=len(verbs), seen=seen, mastered=mastered, by_verb=by_verb)
+
 # -------- Routes ---------
 
 @router.get('/words')
@@ -165,3 +213,39 @@ async def get_progress(username: str = Depends(get_current_user)):
 async def reset_progress(username: str = Depends(get_current_user)):
     _save_progress(username, {"cards": {}})
     return {"status": "ok"}
+
+# -------- Verb Routes ---------
+@router.get('/verb/question', response_model=VerbQuestion)
+async def get_verb_question(username: str = Depends(get_current_user)):
+    verbs = _load_verbs()
+    return _sample_verb_question(verbs)
+
+@router.post('/verb/answer', response_model=VerbAnswerResponse)
+async def submit_verb_answer(payload: VerbAnswerRequest, username: str = Depends(get_current_user)):
+    verbs = _load_verbs()
+    try:
+        verb = _get_verb_by_id(verbs, payload.verb_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail='Verb not found')
+    results: Dict[str, bool] = {}
+    correct_forms: Dict[str, str] = {p: verb[p] for p in PRONOUN_ORDER}
+    for p in PRONOUN_ORDER:
+        user_ans = payload.answers.get(p, '').strip()
+        results[p] = _normalize_text(user_ans) == _normalize_text(verb[p]) if user_ans else False
+    all_correct = all(results[p] for p in PRONOUN_ORDER)
+    # progress update
+    progress = _load_progress(username)
+    _update_verb_progress(progress, verb['id'], all_correct)
+    _save_progress(username, progress)
+    return VerbAnswerResponse(verb_id=verb['id'], infinitive=verb['infinitive'], results=results, correct_forms=correct_forms, all_correct=all_correct)
+
+@router.get('/verb/progress', response_model=VerbProgressSummary)
+async def get_verb_progress(username: str = Depends(get_current_user)):
+    verbs = _load_verbs()
+    progress = _load_progress(username)
+    return _verb_progress_summary(verbs, progress)
+
+@router.get('/verb/list')
+async def list_verbs(username: str = Depends(get_current_user)):
+    verbs = _load_verbs()
+    return [{"id": v['id'], "infinitive": v['infinitive']} for v in verbs]

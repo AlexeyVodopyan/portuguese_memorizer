@@ -19,6 +19,11 @@ export interface ProgressSummary {
   by_card: Record<number, { seen: number; correct: number; incorrect: number; streak: number }>
 }
 
+export interface VerbQuestion { verb_id: number; infinitive: string; pronouns: string[] }
+export interface VerbAnswerResponse { verb_id: number; infinitive: string; results: Record<string, boolean>; correct_forms: Record<string,string>; all_correct: boolean }
+export interface VerbProgressSummary { total: number; seen: number; mastered: number; by_verb: Record<number,{seen:number; mastered:number}> }
+export interface VerbListItem { id: number; infinitive: string }
+
 const API_BASE = (import.meta as any).env?.VITE_API_BASE || 'http://127.0.0.1:8000'
 
 let authToken: string | null = typeof localStorage !== 'undefined' ? localStorage.getItem('auth_token') : null
@@ -73,6 +78,11 @@ const api = {
   resetProgress: () => http<{ status: string }>(`/api/reset`, { method: 'POST' }),
   getWords: () => http<Array<{ id: number; pt: string; ru: string; category?: string }>>(`/api/words`),
   getToken: () => authToken,
+  getVerbQuestion: () => http<VerbQuestion>(`/api/verb/question`),
+  submitVerbAnswer: (payload: { verb_id: number; answers: Record<string,string> }) =>
+    http<VerbAnswerResponse>(`/api/verb/answer`, { method: 'POST', body: JSON.stringify(payload) }),
+  getVerbProgress: () => http<VerbProgressSummary>(`/api/verb/progress`),
+  getVerbList: () => http<VerbListItem[]>(`/api/verb/list`),
 }
 
 export { setToken }
